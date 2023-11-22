@@ -1,5 +1,6 @@
 import 'package:clients_products_page/api_calls/auth.dart';
 import 'package:clients_products_page/providers/app_data.dart';
+import 'package:clients_products_page/ui/display_products.dart';
 import 'package:clients_products_page/ui/register_page.dart';
 import 'package:clients_products_page/widgets/input_field.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
         // Authentication successful, you can navigate to another page or perform other actions.
         // Navigate to the sign-up page when the text is clicked
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return Placeholder(); // Replace with post login page
+          return ProductsPage(); // Replace with post login page
         }));
       } else {
         // Authentication failed, show an error message to the user.

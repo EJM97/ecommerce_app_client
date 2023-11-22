@@ -1,5 +1,8 @@
+import 'package:clients_products_page/models/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:clients_products_page/models/product.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:clients_products_page/api_calls/cart_actions.dart';
 
 class ProductWidget extends StatelessWidget {
   final Product product;
@@ -43,13 +46,12 @@ class ProductWidget extends StatelessWidget {
                   ),
                   SizedBox(height: 8.0),
                   ElevatedButton(
-                    onPressed: null, // Placeholder for the onTap function
+                    onPressed: add_to_cart,
                     style: ElevatedButton.styleFrom(
                       primary: Theme.of(context)
                           .colorScheme
                           .primary, // Use the primary color from the theme
                     ),
-
                     child: Text(
                       "Add to Cart",
                       style: TextStyle(
@@ -130,5 +132,17 @@ class ProductWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> add_to_cart() async {
+    final CartActions cartActions = CartActions();
+    final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    List<dynamic> cartItems = [];
+
+    String? userEmail = await secureStorage.read(key: 'email');
+    String? userPassword = await secureStorage.read(key: 'password');
+
+    Future<List<CartItem>> updated_cart =
+        cartActions.addToCart(userEmail, userPassword, product.id);
   }
 }

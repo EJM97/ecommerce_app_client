@@ -1,9 +1,17 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:clients_products_page/models/user.dart'; //will be needed if api response sends user details on login
 
 class Auth {
   final String baseUrl = 'http://192.168.0.70:8080/api/auth';
+
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
+  Future<void> secureStore(String email, String password) async {
+    await secureStorage.write(key: 'email', value: email);
+    await secureStorage.write(key: 'password', value: password);
+  }
 
   Future<String?> login(String email, String password) async {
     // Future<User?> login(String email, String password) async {
@@ -26,6 +34,7 @@ class Auth {
       // return User.fromJson(userData);
       print(userData);
       if (userData == "email psw found") {
+        await secureStore(email, password);
         return "email psw found";
       }
       return null;
@@ -56,6 +65,7 @@ class Auth {
       final userData = response.body;
       // return User.fromJson(userData);
       print(userData);
+      await secureStore(email, password);
       return "Registered Successfully";
     } else {
       final userData = jsonDecode(response.body);
