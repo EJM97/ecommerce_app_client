@@ -15,7 +15,7 @@ class CartActions {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
-      print("response= ${response}");
+      print("response= ${response.body}");
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -70,6 +70,8 @@ class CartActions {
   Future<List<CartItem>> updateQuantity(
       email, password, productId, quantity) async {
     final url = '$baseUrl/update';
+    print("quantity");
+    print(quantity);
 
     try {
       final response = await http.post(

@@ -3,27 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:clients_products_page/models/cart_item.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class CartItemWidget extends StatelessWidget {
+class CartItemDisplayWidget extends StatelessWidget {
   final CartItem cartItem;
-  final Future<void> Function() onItemUpdate;
+
   // late VoidCallback onItemUpdated;
 
-  CartItemWidget({
+  CartItemDisplayWidget({
     required this.cartItem,
-    required this.onItemUpdate,
   });
   onQuantityChanged(int quantity) async {
     final CartActions cartActions = CartActions();
     final FlutterSecureStorage secureStorage = FlutterSecureStorage();
     List<dynamic> cartItems = [];
-    print(quantity);
 
     String? email = await secureStorage.read(key: 'email');
     String? password = await secureStorage.read(key: 'password');
     var productId = cartItem.product.id;
-    Future<List<CartItem>> updated_cart =
-        cartActions.updateQuantity(email, password, productId, quantity);
-    await onItemUpdate();
   }
 
   @override
@@ -33,27 +28,11 @@ class CartItemWidget extends StatelessWidget {
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Price: \$${cartItem.product.price * cartItem.quantity}'),
+          Text('Price: \$${cartItem.product.price}0'),
+          Text('Qty: ${cartItem.quantity}'),
           Row(
             children: [
-              IconButton(
-                icon: Icon(Icons.remove),
-                onPressed: () => {
-                  // null
-                  onQuantityChanged(cartItem.quantity - 1)
-                },
-              ),
-              Text('${cartItem.quantity}'),
-              IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () => {
-                        // null
-                        onQuantityChanged((cartItem.quantity + 1)),
-                      }),
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () => {onQuantityChanged(0)},
-              ),
+              Text('Subtotal: \$${cartItem.product.price * cartItem.quantity}'),
             ],
           ),
         ],

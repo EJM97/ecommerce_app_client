@@ -44,9 +44,13 @@ class _ProductsPageState extends State<ProductsPage> {
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return CartPage();
-              }));
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return CartPage();
+                  },
+                ),
+              );
             },
           ),
         ],

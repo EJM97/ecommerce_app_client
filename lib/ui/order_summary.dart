@@ -1,15 +1,18 @@
-import 'package:clients_products_page/ui/order_summary.dart';
-import 'package:clients_products_page/widgets/cart_item_widget.dart';
+import 'package:clients_products_page/widgets/cart_item_display_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:clients_products_page/widgets/cart_item_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:clients_products_page/api_calls/cart_actions.dart';
+import 'package:data_tables/data_tables.dart';
 
-class CartPage extends StatefulWidget {
+class OrderSummaryPage extends StatefulWidget {
+  const OrderSummaryPage({super.key});
+
   @override
-  _CartPageState createState() => _CartPageState();
+  State<OrderSummaryPage> createState() => _OrderSummaryPageState();
 }
 
-class _CartPageState extends State<CartPage> {
+class _OrderSummaryPageState extends State<OrderSummaryPage> {
   final CartActions cartActions = CartActions();
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   List<dynamic> cartItems = [];
@@ -40,8 +43,6 @@ class _CartPageState extends State<CartPage> {
     try {
       List<dynamic> fetchedCart =
           await cartActions.fetchCart(userEmail, userPassword);
-
-      // print(fetchedCart.toString());
       setState(() {
         cartItems = fetchedCart;
       });
@@ -55,21 +56,43 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Shopping Cart'),
+        title: Text('Order Summary'),
       ),
-      body: cartItems.isEmpty
-          ? Center(
-              child: Text('Your cart is empty.'),
-            )
-          : ListView.builder(
+      body: Column(
+        children: [
+          SizedBox(
+            height: 20,
+            child: Row(
+              children: [
+                Text("Cart Summary:"),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
               itemCount: cartItems.length,
               itemBuilder: (context, index) {
-                return CartItemWidget(
-                  cartItem: cartItems[index], //callback
-                  onItemUpdate: fetchCart,
+                return CartItemDisplayWidget(
+                  cartItem: cartItems[index],
                 );
               },
             ),
+          ),
+          Row(
+            children: [
+              Text("Send to:"),
+            ],
+          ),
+          Text("Name:"),
+          Text("Email:"),
+          Text("Address:"),
+          Row(
+            children: [
+              Text("Pay with:"),
+            ],
+          ),
+        ],
+      ),
       bottomNavigationBar: cartItems.isNotEmpty
           ? Container(
               padding: EdgeInsets.all(8.0),
@@ -78,22 +101,15 @@ class _CartPageState extends State<CartPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total: \$${calculateTotal()}',
+                    'Order total: \$${calculateTotal()}',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return OrderSummaryPage();
-                          },
-                        ),
-                      );
                       // Handle checkout action
                       // You can navigate to a checkout page or perform other actions
                     },
-                    child: Text('Checkout'),
+                    child: Text('Proceed to Payment'),
                   ),
                 ],
               ),
